@@ -1,161 +1,107 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let easy = document.getElementById("easy");
-    let medium = document.getElementById("medium");
-    let strong = document.getElementById("strong");
-    let passwordishere = document.getElementById("passwordishere");
-    let generate_password = document.getElementById("generate_password");
-    let save = document.getElementById("save");
-    let password = '';
-   
-    
-    let save_it=document.getElementById("save_it")
-    let View=document.getElementById("View");
-    let WhereTo = document.getElementById("WhereTo");
-    let currentMode = 'easy'; // Default mode
-    // save pass
-    save_it.addEventListener("click", () => {
-        let View_pass=document.getElementById("View_pass").value.trim()
-        localStorage.setItem('UserPass', View_pass); // Save user's master password correctly
-    });
-    
-    //viwe style.display = "block";
-    View.addEventListener("click", () =>{
-        console.log('click')
-        let View_pass=document.getElementById("View_pass")
-        View_pass.style.display = "block";
-        NewView_pass = View_pass.value.trim();
+// Password Generator - Simple & Clean
+class PasswordGenerator {
+    constructor() {
+        this.currentMode = 'easy';
+        this.init();
+    }
 
-     
-        let UserPass=localStorage.getItem('UserPass')
-       
-        if(!UserPass){
-            alert('First creat a pass')
-            save_it.style.display = "block";
-        }
-        else{
+    init() {
+        // Get all DOM elements
+        this.easyBtn = document.getElementById('easy');
+        this.mediumBtn = document.getElementById('medium');
+        this.strongBtn = document.getElementById('strong');
+        this.passwordDisplay = document.getElementById('passwordishere');
+        this.generateBtn = document.getElementById('generate_password');
         
-        if(NewView_pass==UserPass){
-            let arr=JSON.parse(localStorage.getItem("passwordList")) || [];
-        for(let i of arr){
-            console.log(i)
-            console.log(localStorage.getItem(i))
-
-        }
-        }
-        else{
-            alert("Wrong Password")
-        }
-    }
-    })
-    //pass 
-    save.addEventListener("click", () => {
-        savepasword(password)
-        let location = WhereTo.value.trim()
+        // Add event listeners
+        this.easyBtn.addEventListener('click', () => this.setMode('easy'));
+        this.mediumBtn.addEventListener('click', () => this.setMode('medium'));
+        this.strongBtn.addEventListener('click', () => this.setMode('strong'));
+        this.generateBtn.addEventListener('click', () => this.generatePassword());
         
-        console.log(location)
-        if (location) {
-            console.log(location)
-            localStorage.setItem(location, password)
-            let arr = JSON.parse(localStorage.getItem("passwordList")) || [];// pushing snew pasword in array while remaning old ones
+        // Generate first password on load
+        this.generatePassword();
+    }
 
-            arr.push(location);
-            console.log(arr)
-            localStorage.setItem("passwordList", JSON.stringify(arr));
-            WhereTo.value="";// first none 
-            WhereTo.placeholder="Use for?";// then placeholder
-            save.style.display="none";
-            passwordishere.innerHTML="Password saved! "
+    setMode(mode) {
+        this.currentMode = mode;
+        this.updateActiveButton(mode);
+    }
 
-        }
-        else {
-            alert("Please select where to save the password")
-        }
+    updateActiveButton(activeMode) {
+        // Remove active class from all buttons
+        [this.easyBtn, this.mediumBtn, this.strongBtn].forEach(btn => {
+            btn.classList.remove('active');
+        });
         
-    })
-
-
-    function get_number() {
-        return Math.floor(Math.random() * 10); // Generate a random number between 0 and 9
+        // Add active class to selected button
+        if (activeMode === 'easy') this.easyBtn.classList.add('active');
+        if (activeMode === 'medium') this.mediumBtn.classList.add('active');
+        if (activeMode === 'strong') this.strongBtn.classList.add('active');
     }
 
-    function getRandomLetter() {
-        const randomCase = Math.random() < 0.5 ? 65 : 97; // 50% chance for uppercase or lowercase
-        const randomCode = Math.floor(Math.random() * 26) + randomCase;
-        return String.fromCharCode(randomCode);
+    // Helper functions
+    getRandomNumber() {
+        return Math.floor(Math.random() * 10);
     }
 
-    function special_char() {
-        const randomCase = Math.random();
-        if (randomCase < 0.33) {
-            return '#';
-        } else if (randomCase < 0.66) {
-            return '$';
-        } else {
-            return '@';
-        }
+    getRandomLetter() {
+        const isUpperCase = Math.random() < 0.5;
+        const charCode = isUpperCase ? 65 : 97;
+        return String.fromCharCode(Math.floor(Math.random() * 26) + charCode);
     }
 
-    function generatePassword() {
-        password = '';
-        if (currentMode === 'easy') {
+    getSpecialChar() {
+        const specialChars = ['!', '@', '#', '$', '%', '&', '*', '?'];
+        return specialChars[Math.floor(Math.random() * specialChars.length)];
+    }
+
+    generatePassword() {
+        let password = '';
+        
+        if (this.currentMode === 'easy') {
+            // Easy: 8 digits only
             for (let i = 0; i < 8; i++) {
-                password += get_number();
+                password += this.getRandomNumber();
             }
-        } else if (currentMode === 'medium') {
+        } 
+        else if (this.currentMode === 'medium') {
+            // Medium: 10 chars (letters + numbers)
             for (let i = 0; i < 10; i++) {
-                let randa = Math.random()
-
-                if (randa < 0.5) {
-                    password += get_number();
+                const random = Math.random();
+                if (random < 0.5) {
+                    password += this.getRandomNumber();
                 } else {
-                    password += getRandomLetter();
+                    password += this.getRandomLetter();
                 }
             }
-        } else if (currentMode === 'strong') {
+        } 
+        else if (this.currentMode === 'strong') {
+            // Strong: 15 chars (letters + numbers + symbols)
             for (let i = 0; i < 15; i++) {
-                let randa = Math.random()
-
-                if (randa < 0.33) {
-                    password += get_number();
-                } else if (randa > 0.33 && randa < 0.66) {
-                    password += getRandomLetter();
+                const random = Math.random();
+                if (random < 0.4) {
+                    password += this.getRandomNumber();
+                } else if (random < 0.7) {
+                    password += this.getRandomLetter();
                 } else {
-                    password += special_char();
+                    password += this.getSpecialChar();
                 }
             }
         }
-
-        passwordishere.textContent = password;
-
-        if (password) {// making the display of password visible only when password is generated
-            save.style.display = 'block'
-        }
-
+        
+        // Display the generated password
+        this.passwordDisplay.textContent = password;
+        
+        // Add copy animation
+        this.passwordDisplay.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            this.passwordDisplay.style.transform = 'scale(1)';
+        }, 200);
     }
+}
 
-
-
-    easy.addEventListener("click", () => {
-        currentMode = 'easy';
-    });
-
-    medium.addEventListener("click", () => {
-        currentMode = 'medium';
-    });
-
-    strong.addEventListener("click", () => {
-        currentMode = 'strong';
-    });
-
-    generate_password.addEventListener("click", generatePassword);
-    //fn to save password
-    function savepasword(password) {
-
-        console.log(password)
-     
-
-    }
-
-
-
-})
+// Start the app when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new PasswordGenerator();
+});
