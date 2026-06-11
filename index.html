@@ -1,34 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Password Generator</title>
-  <link rel="stylesheet" href="style.css" />
- 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .strength-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .strength-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .strength-btn.easy {
+            background: #4caf50;
+            color: white;
+        }
+
+        .strength-btn.medium {
+            background: #ff9800;
+            color: white;
+        }
+
+        .strength-btn.strong {
+            background: #f44336;
+            color: white;
+        }
+
+        .strength-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .strength-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .password-box {
+            background: #f5f5f5;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            word-break: break-all;
+            font-family: monospace;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .info {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .password-display {
+                font-size: 18px;
+            }
+            
+            .strength-buttons {
+                gap: 8px;
+            }
+            
+            .strength-btn {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="password-generator">
-    
-    <div id="passwordishere">Your password will appear here</div>
-
-    <div class="mode-buttons">
-      <label><input type="radio" name="level" id="easy" value="easy" checked /> Easy</label>
-      <label><input type="radio" name="level" id="medium" value="medium" /> Medium</label>
-      <label><input type="radio" name="level" id="strong" value="strong" /> Strong</label>
+    <div class="container">
+        <h1>🔐 Password Generator</h1>
+        
+        <div class="strength-buttons">
+            <button id="easy" class="strength-btn easy active">Easy</button>
+            <button id="medium" class="strength-btn medium">Medium</button>
+            <button id="strong" class="strength-btn strong">Strong</button>
+        </div>
+        
+        <div class="password-box">
+            <div id="passwordishere" class="password-display">Click Generate</div>
+        </div>
+        
+        <button id="generate_password" class="generate-btn">⚡ Generate Password</button>
+        
+        <div class="info">
+            <p>🔹 Easy: 8 digits (0-9)</p>
+            <p>🔸 Medium: 10 chars (letters + numbers)</p>
+            <p>🔹 Strong: 15 chars (letters + numbers + symbols)</p>
+        </div>
     </div>
 
-    <button type="button" id="generate_password">Generate Password</button>
-
-    <input id="WhereTo" type="text" placeholder="Use for?" />
-
-    <button id="save" style="display:none">Save Password</button>
-    <button id="View" >View Passwords</button>
-    <input id="View_pass" style="display: none;" type="text" placeholder="enter the password" />
-    <button id="save_it" style="display: none;">save it</button>
-
-  </div>
-
-  <script src="index.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
